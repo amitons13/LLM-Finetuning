@@ -28,16 +28,26 @@ You will see how to:
 
 ### 2. [`2-InstructVsBaseModel.ipynb`](2-InstructVsBaseModel.ipynb) — Instruct vs. base models & LoRA fine-tuning
 
-Explains the difference between **base** and **instruct** models — the key being the **chat template** with special tokens (`<|begin_of_text|>`, `<|start_header_id|>`, `<|eot_id|>`) that instruct models are trained on — and then fine-tunes an instruct model end to end.
+A complete, end-to-end fine-tuning walkthrough built around one core idea: the difference between a **base** model and an **instruct** model.
 
-Starting from `meta-llama/Llama-3.2-1B-Instruct`, the notebook:
-- Loads the model in 8-bit.
-- Loads a **natural-language → Docker command** dataset.
-- Formats each example with Llama's chat template.
-- Tokenizes and batches the data (dynamic padding + label masking).
-- Attaches **LoRA** adapters and runs **supervised fine-tuning (SFT)** with `trl`'s `SFTTrainer` — training only ~3.5% of the parameters.
-- Merges the LoRA adapters into a full-precision model and pushes it to the Hub.
-- Runs inference to translate English requests into Docker commands.
+- A **base** model is only pretrained to predict the next token on raw text.
+- An **instruct** model is further trained (SFT / RLHF) to follow instructions, and it expects inputs formatted with a **chat template** — role-based `system` / `user` / `assistant` turns wrapped in model-specific special tokens (for Llama 3.2: `<|begin_of_text|>`, `<|start_header_id|>`, `<|eot_id|>`). The notebook renders the *same* conversation with both the Mistral and Llama templates to make the contrast concrete.
+
+Using `meta-llama/Llama-3.2-1B-Instruct`, it then fine-tunes the model to translate plain-English requests into **Docker commands**, covering the full workflow:
+
+1. **Load** the instruct model in 8-bit (`BitsAndBytesConfig`) so it fits on a small GPU.
+2. **Load & split** the [`MattCoddity/dockerNLcommands`](https://huggingface.co/datasets/MattCoddity/dockerNLcommands) dataset (80/20 train/validation).
+3. **Format** each row into a `system` / `user` / `assistant` conversation and render it with Llama's chat template.
+4. **Tokenize** the data and batch it with `DataCollatorForLanguageModeling` (dynamic padding + label masking, `-100` on pad positions).
+5. **Add LoRA adapters** — a dedicated, illustrated section explains *what LoRA is and why we use it*, then `LoraConfig` (rank 64) makes only **~3.5%** of the parameters trainable.
+6. **Train** with `trl`'s `SFTTrainer` for a short 60-step demo run.
+7. **Inspect** how the frozen int8 base weights stay unchanged while the fp32 LoRA matrices are updated.
+8. **Merge** the adapters into a full-precision model (`merge_and_unload`) and **push** it to the Hub.
+9. **Run inference** with both greedy and sampled decoding to watch the fine-tuned model produce Docker commands.
+
+**Concepts covered:** base vs. instruct models, chat templates & special tokens, 8-bit quantization, LoRA / parameter-efficient fine-tuning, supervised fine-tuning (SFT), dynamic padding & label masking, and adapter merging.
+
+Every code cell is annotated with line-by-line comments, and each section has an explanatory markdown intro.
 
 ## Setup
 
