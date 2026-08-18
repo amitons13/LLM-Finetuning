@@ -164,9 +164,15 @@ The LoRA knobs (set via `LoraConfig`):
 
 After training you can **merge** the adapters back into the base weights (`merge_and_unload()`), folding `W ← W + (α/r)·B·A` into a standalone fine-tuned model with no LoRA wrappers left.
 
+The same LoRA pipeline is reused by every training notebook here (SFT, DPO, and GRPO) — only the training step in the middle changes:
+
+![The LoRA fine-tuning pipeline: freeze the quantized base, train small adapters, then merge and push](images/finetuning-pipeline.png)
+
 ### 6. Aligning a model: SFT vs. DPO vs. GRPO
 
 Once a model can follow instructions, "alignment" means shaping *which* answers it gives. These three notebooks demonstrate the three main tools, which differ mainly in **what kind of training signal** they need:
+
+![SFT learns from one correct answer, DPO from a chosen/rejected pair, GRPO from a reward function scoring a group of answers](images/alignment-methods.png)
 
 | Method | Training signal you must provide | Needs a reward model? | Uses RL? | Best when… |
 |--------|----------------------------------|:--------------------:|:--------:|------------|
