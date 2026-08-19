@@ -16,7 +16,7 @@ Work through the notebooks in this order — each one builds on the previous:
 |---|----------|---------------------|--------------|
 | 1 | [`1-Quantization.ipynb`](1-Quantization.ipynb) | How do I fit a big model into a small GPU? | Quantization (32/16/8/4-bit) |
 | 2 | [`2-InstructVsBaseModel.ipynb`](2-InstructVsBaseModel.ipynb) | How do I teach a model a new skill cheaply? | Base vs. instruct, chat templates, **SFT**, **LoRA** |
-| 3 | [`DPO.ipynb`](DPO.ipynb) | How do I make a model *prefer* good answers over bad ones? | **DPO** (preference alignment) |
+| 3 | [`3-DPO.ipynb`](3-DPO.ipynb) | How do I make a model *prefer* good answers over bad ones? | **DPO** (preference alignment) |
 | 4 | [`GRPO.ipynb`](GRPO.ipynb) | How do I teach a model to *reason* when I have no labels? | **GRPO** (RL from reward functions) |
 | 5 | [`Thinking__(REASONING)_model.ipynb`](Thinking__(REASONING)_model.ipynb) | What does a finished reasoning model look like? | Chain-of-thought / `<think>` models |
 
@@ -281,7 +281,7 @@ Makes the [base-vs-instruct](#3-base-vs-instruct-models--chat-templates) distinc
 
 Covers: base vs. instruct, chat templates, [8-bit quantization](#1-quantization), [SFT](#4-fine-tuning-and-sft), [LoRA](#5-lora-low-rank-adaptation), dynamic padding & label masking, adapter merging.
 
-### 3. [`DPO.ipynb`](DPO.ipynb) — Preference alignment with DPO
+### 3. [`3-DPO.ipynb`](3-DPO.ipynb) — Preference alignment with DPO
 
 Fine-tunes `Qwen2.5-1.5B-Instruct` to sound more **human/natural** using [Direct Preference Optimization](#7-dpo-direct-preference-optimization):
 
